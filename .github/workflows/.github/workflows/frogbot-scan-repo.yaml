@@ -1,0 +1,43 @@
+name: "Frogbot Repository Scan"
+on:
+  workflow_dispatch:
+  schedule:
+    # The repository will be scanned once a day at 00:00 GMT.
+    - cron: "0 0 * * *"
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+  id-token: write
+jobs:
+  scan-repository:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The repository scanning will be triggered periodically on the following branches.
+        branch: ["main"]
+    steps:
+      - uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: nitin-jfrog-github-oidc
+        env:
+          ACTIONS_STEP_DEBUG: true
+          # [Mandatory]
+          # JFrog platform URL
+          JF_URL: ${{ vars.JF_URL }}
+
+          # [Mandatory]
+          # The GitHub token is automatically generated for the job
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # [Mandatory]
+          # The name of the branch on which Frogbot will perform the scan
+          JF_GIT_BASE_BRANCH: ${{ matrix.branch }}
+
+          # [Optional]
+          # JFrog project. Learn more about it here: https://www.jfrog.com/confluence/display/JFROG/Projects
+          # JF_PROJECT: ${{ secrets.JF_PROJECT }}
+
+          # [Optional, default: "TRUE"]
+          # Fails the Frogbot task if any security issue is found.
+          JF_FAIL: "FALSE"
