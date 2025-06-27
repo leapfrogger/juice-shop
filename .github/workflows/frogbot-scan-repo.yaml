@@ -17,7 +17,7 @@ jobs:
         # The repository scanning will be triggered periodically on the following branches.
         branch: ["main"]
     steps:
-      - uses: jfrog/frogbot@v2
+      - uses: jfrog/frogbot@v2.26.3
         with:
           oidc-provider-name: nitin-jfrog-github-oidc
         env:
