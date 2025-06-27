@@ -48,7 +48,6 @@ jobs:
       
       - name: Jfrog cli version
         run: |
-          jf rt ping --url=${{ secrets.JF_URL }}
           jfrog -v
 
       - name: Build
